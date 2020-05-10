@@ -1,6 +1,9 @@
 # REST API Demo
 A REST server written in Java with Spring Boot. 
 
+## Running
+    ./gradle bootRun
+
 ## Methods
 ### Students
 #### GET /student
