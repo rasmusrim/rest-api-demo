@@ -1,30 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import './App.scss';
+import StudentList from "./components/StudentList"
 
-import StudentService from "./services/StudentService";
+import StudentRepository from "./repositories/StudentRepository";
+import AbsenceRepository from "./repositories/AbsenceRepository"
+
+import moment from 'moment';
 
 function App() {
-  StudentService.getAllStudents().then(students => {
-    console.log(students)
-  })
-  
+  const [students, setStudents] = useState([]);
+  const [month, setMonth] = useState(moment());
+
+  useEffect(() => {
+    StudentRepository.getAllStudentsWithAbsenceFor(month).then(students => {
+      setStudents(students)
+      console.log(students)
+    });
+  }, []);
+
+
+  const goToLastMonth = function () {
+    let lastMonth = month.clone().subtract(1, 'months');
+    setMonth(lastMonth);
+  }
+
+  const goToNextMonth = function () {
+    let nextMonth = month.clone().add(1, 'months');
+    setMonth(nextMonth);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {typeof month !== "undefined" && (
+        <>
+          <button onClick={goToLastMonth}>&lt;&lt; Last month</button>
+          <span>{month.format("MMMM YYYY")}</span>
+          <button onClick={goToNextMonth}>Next month &gt;&gt;</button>
+        </>
+      )}
+
+
+      <StudentList students={students} month={month} />
     </div>
   );
 }

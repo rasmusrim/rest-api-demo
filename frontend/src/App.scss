@@ -1,0 +1,15 @@
+.absence-code-selector {
+  position: absolute;
+  background: #fafafa;
+  padding: 15px;
+  list-style: none;
+
+  li {
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+    }
+  }
+
+}

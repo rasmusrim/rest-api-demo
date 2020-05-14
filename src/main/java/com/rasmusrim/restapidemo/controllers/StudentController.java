@@ -1,19 +1,13 @@
 package com.rasmusrim.restapidemo.controllers;
 
 import com.rasmusrim.restapidemo.models.Student;
+import com.rasmusrim.restapidemo.repositories.AbsenceRepository;
 import com.rasmusrim.restapidemo.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -25,6 +19,10 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private AbsenceRepository absenceRepository;
+
+
     @GetMapping({"/student/{id}"})
     public Student getSingleStudent(@PathVariable(required = true) String id) {
         Student student = studentRepository.getById(Long.parseLong(id));
@@ -34,10 +32,19 @@ public class StudentController {
     }
 
     @GetMapping({"/student"})
-    public Iterable<Student> getAllStudent() {
-        Iterable<Student> students = studentRepository.findAll();
+    public Map<Long, Student> getAllStudents() {
+        var students = studentRepository.findAll();
+        var iterator = students.iterator();
 
-        return students;
+        var returnMap = new HashMap<Long, Student>();
+
+        while(iterator.hasNext()) {
+            var student = iterator.next();
+            returnMap.put(student.getId(), student);
+        }
+
+
+        return returnMap;
 
     }
 
