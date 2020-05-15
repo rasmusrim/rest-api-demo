@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AbsenceService from '../services/AbsenceService';
+import AbsenceTypeService from '../services/AbsenceTypeService';
 
 export default function AbsenceCodeSelector({absenceCodeSelected}) {
     
@@ -7,17 +7,16 @@ export default function AbsenceCodeSelector({absenceCodeSelected}) {
 
 
     useEffect(() => {
-        AbsenceService.getAbsenceCodes().then(codes => {
+        AbsenceTypeService.getAbsenceCodes().then(codes => {
             setAbsenceCodes(codes);
         })
     
     }, [])
-
     
     return (
         <ul className={"absence-code-selector"}>
             { absenceCodes.map(absenceCode => {
-                return <li onClick={() => absenceCodeSelected(absenceCode.code)}>{absenceCode.label}</li>
+                return <li key={absenceCode.code} onClick={() => absenceCodeSelected(absenceCode.code)}>{absenceCode.label}</li>
              })}
         </ul>
     )

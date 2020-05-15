@@ -12,28 +12,27 @@ export default class StudentRepository {
         })
     }
 
-    static getAllStudentsWithAbsenceFor(date) {
-        return new Promise(async (resolve, reject) => {
+    static async getAllStudentsWithAbsenceFor(date) {
 
         let students = await this.getAllStudents();
         let absenceEntries = await AbsenceRepository.getAbsenceForAllStudents(date);
+
+        Object.keys(students).forEach(studentIndex => {
+            students[studentIndex].absence = new Map();
+        })
 
         for (let key in absenceEntries) {
             let absenceEntry = absenceEntries[key];
             let absenceEntryDate = moment(absenceEntry.date);
             let studentId = absenceEntry.studentId;
 
-            if (typeof students[studentId].absence === "undefined") {
-                students[studentId].absence = new Map();
-            }
-
-            students[studentId].absence.set(absenceEntryDate, absenceEntry);
+            students[studentId].absence.set(absenceEntryDate.format('YYYY-MM-DD'), absenceEntry);
         }
 
-        resolve(Object.values(students))
-    })
-        
+        return students
     }
+        
+    
 
     static setAbsence(student, date, absenceCode) {
         return new Promise((resolve, reject) => {

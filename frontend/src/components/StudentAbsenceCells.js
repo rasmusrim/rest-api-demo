@@ -1,28 +1,32 @@
 import React from 'react';
 import AbsenceCodeSelector from './AbsenceCodeSelector'
+import StudentAbsenceCell from './StudentAbsenceCell'
 
 export default function StudentAbsenceCells({ month, student, studentAbsenceCellClicked, showAbsenceCodeSelectorDate, saveStudentAbsence }) {
     let currentDay = month.clone().startOf('month').clone();
 
     let output = [];
 
-    let i = 0;
-
     const absenceCodeSelected = (date, code) => {
         saveStudentAbsence(student, date, code)
     }
 
     while (currentDay.month() === month.month()) {
-        let date = currentDay.toISOString();
-        let key = "student-" + student.id + "-absence-" + currentDay.date()
+        let date = currentDay.format('YYYY-MM-DD');
+        let key = "student-" + student.id + "-absence-" + date
+        let absenceEntry = student.absence.get(date);
 
-        output.push(<td key={key} onClick={() => studentAbsenceCellClicked(student, date)}>
-            {showAbsenceCodeSelectorDate && showAbsenceCodeSelectorDate.toISOString() === date && (
-                <AbsenceCodeSelector absenceCodeSelected={(code) => absenceCodeSelected(date, code)} date={date} />
-            )}
-        </td>)
+        let showAbsenceCodeSelector = showAbsenceCodeSelectorDate && showAbsenceCodeSelectorDate === date
+
+        output.push(
+            <td key={key} onClick={() => studentAbsenceCellClicked(student, date)}>
+                { showAbsenceCodeSelector && (
+                    <AbsenceCodeSelector absenceCodeSelected={(code) => absenceCodeSelected(date, code)} date={date} />
+                )}
+
+                <StudentAbsenceCell absenceEntry={absenceEntry} />
+            </td>)
         currentDay.add(1, 'day')
-        i++;
     }
 
     return output;

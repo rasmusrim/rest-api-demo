@@ -1,18 +1,6 @@
 import AbsenceTypeRepository from "../repositories/AbsenceTypeRepository"
 
-export default class AbsenceService {
-
-    static toggleAbsenceCode(code) {
-        return new Promise(async (resolve, reject) => {
-            let absenceTypes = await this.getAbsenceCodes();
-            if (absenceTypes[code + 1]) {
-                resolve(code + 1);
-            } else {
-                resolve(0);
-            }
-
-        })
-    }
+export default class AbsenceTypeService {
 
     static getAbsenceCodes() {
         return new Promise(async (resolve, reject) => {
@@ -31,4 +19,8 @@ export default class AbsenceService {
 
 
 
+    static async getAbsenceType(code) {
+        let absenceCodes = await this.getAbsenceCodes();
+        return absenceCodes[code];
+    }
 }

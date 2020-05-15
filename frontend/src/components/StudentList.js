@@ -1,35 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Student from "./Student"
 import DatesHeaderRow from "./DatesHeaderRow"
 import StudentAbsenceCells from "./StudentAbsenceCells"
 
 import StudentRepository from "../repositories/StudentRepository"
-
-import AbsenceService from "../services/AbsenceService"
+import _ from 'lodash'
 
 import moment from 'moment';
 
-export default function StudentList({ students, month }) {
+export default function StudentList({ month }) {
 
-    const [absence, setAbsence] = useState(new Map());
     const [activeAbsenceTypeSelector, setActiveAbsenceTypeSelector] = useState({});
+    const [students, setStudents] = useState([]);
 
-    const showStudentAbsenceSelector = async function (student, date) {
-        date = moment(date)
-        const absenceTypeSelector = {
+    useEffect(() => {
+        StudentRepository.getAllStudentsWithAbsenceFor(month).then(students => {
+            setStudents(students)
+        });
+    }, [month]);
+
+
+    const studentAbsenceCellClicked = async function (student, date) {
+        const activeAbsenceTypeSelector = {
             student: student,
             date: date
         }
 
-        setActiveAbsenceTypeSelector(absenceTypeSelector);
+        setActiveAbsenceTypeSelector(activeAbsenceTypeSelector);
 
     }
 
     const saveStudentAbsence = (student, date, code) => {
-        StudentRepository.setAbsence(student, date, code).then(() => {
-            console.log("Saved")
+        StudentRepository.setAbsence(student, date, code).then((absence) => {
+            let newStudents = _.cloneDeep(students);
+            newStudents[absence.studentId].absence.set(moment(absence.date).format('YYYY-MM-DD'), absence)
+            setStudents(newStudents)
+            setActiveAbsenceTypeSelector({})
+
         });
     }
+
+
 
     let emptyColumns = [];
     for (let i = 0; i < 2; i++) {
@@ -46,18 +57,20 @@ export default function StudentList({ students, month }) {
                 </tr>
             </thead>
             <tbody>
-                {students.map(student => {
-                    
+                {Object.values(students).map(student => {
+
                     return (
                         <tr key={student.id}>
                             <Student student={student} />
-                            
-                            <StudentAbsenceCells 
-                                showAbsenceCodeSelectorDate={(typeof activeAbsenceTypeSelector.student !== "undefined" && student.id == activeAbsenceTypeSelector.student.id) ? activeAbsenceTypeSelector.date : null}  
-                                studentAbsenceCellClicked={showStudentAbsenceSelector} 
-                                month={month} 
+
+                            <StudentAbsenceCells
+                                showAbsenceCodeSelectorDate={(typeof activeAbsenceTypeSelector.student !== "undefined" && student.id === activeAbsenceTypeSelector.student.id) ? activeAbsenceTypeSelector.date : null}
+                                studentAbsenceCellClicked={studentAbsenceCellClicked}
+                                month={month}
                                 student={student}
-                                saveStudentAbsence={saveStudentAbsence} />
+                                saveStudentAbsence={saveStudentAbsence}
+
+                            />
 
                         </tr>
                     )
