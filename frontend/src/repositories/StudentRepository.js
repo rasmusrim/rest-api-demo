@@ -14,6 +14,8 @@ export default class StudentRepository {
 
     static async getAllStudentsWithAbsenceFor(date) {
 
+        date = moment(date)
+
         let students = await this.getAllStudents();
         let absenceEntries = await AbsenceRepository.getAbsenceForAllStudents(date);
 

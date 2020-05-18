@@ -6,19 +6,15 @@ import StudentAbsenceCells from "./StudentAbsenceCells"
 import StudentRepository from "../repositories/StudentRepository"
 import _ from 'lodash'
 
+import setStudents from '../reducers/StudentReducer'
+
+import { connect } from 'react-redux'
+
 import moment from 'moment';
 
-export default function StudentList({ month }) {
+function StudentList({ month, students, setStudents }) {
 
     const [activeAbsenceTypeSelector, setActiveAbsenceTypeSelector] = useState({});
-    const [students, setStudents] = useState([]);
-
-    useEffect(() => {
-        StudentRepository.getAllStudentsWithAbsenceFor(month).then(students => {
-            setStudents(students)
-        });
-    }, [month]);
-
 
     const studentAbsenceCellClicked = async function (student, date) {
         const activeAbsenceTypeSelector = {
@@ -29,18 +25,6 @@ export default function StudentList({ month }) {
         setActiveAbsenceTypeSelector(activeAbsenceTypeSelector);
 
     }
-
-    const saveStudentAbsence = (student, date, code) => {
-        StudentRepository.setAbsence(student, date, code).then((absence) => {
-            let newStudents = _.cloneDeep(students);
-            newStudents[absence.studentId].absence.set(moment(absence.date).format('YYYY-MM-DD'), absence)
-            setStudents(newStudents)
-            setActiveAbsenceTypeSelector({})
-
-        });
-    }
-
-
 
     let emptyColumns = [];
     for (let i = 0; i < 2; i++) {
@@ -68,8 +52,6 @@ export default function StudentList({ month }) {
                                 studentAbsenceCellClicked={studentAbsenceCellClicked}
                                 month={month}
                                 student={student}
-                                saveStudentAbsence={saveStudentAbsence}
-
                             />
 
                         </tr>
@@ -82,3 +64,23 @@ export default function StudentList({ month }) {
     return html;
 
 }
+
+function mapStateToProps(state, ownProps) {
+    return {
+        month: state.month,
+        students: state.students
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        setStudents: students => {
+            
+            dispatch(setStudents(students))
+        }
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentList);
+

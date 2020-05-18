@@ -5,7 +5,6 @@ export default function AbsenceCodeSelector({absenceCodeSelected}) {
     
     const [absenceCodes, setAbsenceCodes] = useState([]);
 
-
     useEffect(() => {
         AbsenceTypeService.getAbsenceCodes().then(codes => {
             setAbsenceCodes(codes);

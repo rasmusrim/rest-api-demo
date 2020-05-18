@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
@@ -18,25 +19,6 @@ public class AbsenceController {
 
     @Autowired
     private AbsenceRepository absenceRepository;
-
-    @GetMapping({"/absence/{studentId}/{year}/{month}"})
-    public Map<Long, AbsenceEntry> getAbsenceForSingleStudent(@PathVariable(required = true) String studentId, @PathVariable(required = true) String year, @PathVariable(required = true) String month) {
-        var date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month),1);
-
-        var absenceEntries = absenceRepository.getAbsenceByStudentAndMonth(Integer.parseInt(studentId), date);
-        var iterator = absenceEntries.iterator();
-
-        var returnMap = new HashMap<Long, AbsenceEntry>();
-
-        while(iterator.hasNext()) {
-            var absenceEntry = iterator.next();
-            returnMap.put(absenceEntry.getId(), absenceEntry);
-        }
-
-
-        return returnMap;
-
-    }
 
     @GetMapping({"/absence/{year}/{month}"})
     public Map<Long, AbsenceEntry> getAbsenceForAllStudents(@PathVariable(required = true) String year, @PathVariable(required = true) String month) {
@@ -59,7 +41,10 @@ public class AbsenceController {
     public AbsenceEntry setAbsence(@PathVariable(required = true) String id, @RequestBody Map<String, String> payload) throws ParseException {
         var absence = new AbsenceEntry();
 
-        var date = Date.from(Instant.parse(payload.get("date")));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        var date = formatter.parse(payload.get("date"));
+        System.out.println(payload.get("date"));
+        System.out.println(date);
 
         absence.setDate(date);
         absence.setStudentId(Integer.parseInt(id));

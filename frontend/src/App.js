@@ -1,36 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import StudentAbsenceApp from './components/StudentAbsenceApp'
 import './App.scss';
-import StudentList from "./components/StudentList"
-
+import { createStore } from 'redux'
+import { Provider} from 'react-redux'
+import mainReducer from "./reducers/MainReducer"
 import moment from 'moment';
 
-function App() {
-  const [month, setMonth] = useState(moment());
+const store = createStore(mainReducer, { month: moment().format('YYYY-MM')})
 
-  const goToLastMonth = function () {
-    let lastMonth = month.clone().subtract(1, 'months');
-    setMonth(lastMonth);
-  }
-
-  const goToNextMonth = function () {
-    let nextMonth = month.clone().add(1, 'months');
-    setMonth(nextMonth);
-  }
-
+export default function App() {
   return (
     <div className="App">
-      {typeof month !== "undefined" && (
-        <>
-          <button onClick={goToLastMonth}>&lt;&lt; Last month</button>
-          <span>{month.format("MMMM YYYY")}</span>
-          <button onClick={goToNextMonth}>Next month &gt;&gt;</button>
-        </>
-      )}
-
-
-      <StudentList month={month} />
+      <Provider store={store}>
+        <StudentAbsenceApp />
+      </Provider>
     </div>
-  );
+  )
 }
-
-export default App;

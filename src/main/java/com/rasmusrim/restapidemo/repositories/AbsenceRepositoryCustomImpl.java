@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,33 +16,24 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class AbsenceRepositoryCustomImpl implements AbsenceRepositoryCustom {
 
+    private String tableName = "absence_entry";
+
     @PersistenceContext
     EntityManager entityManager;
-
-    @Override
-    public List<AbsenceEntry> getAbsenceByStudentAndMonth(int studentId, LocalDate date) {
-        var firstDay = date.toString();
-        var lastDay = LocalDate.parse(date.getYear() + "-" + String.format("%02d", date.getMonthValue())  + "-" + date.lengthOfMonth());
-
-        Query query = entityManager.createNativeQuery("SELECT * FROM absence " +
-                "WHERE student_id = ? AND date <= ? AND date >= ?", AbsenceEntry.class);
-        query.setParameter(1, studentId);
-        query.setParameter(2, lastDay);
-        query.setParameter(3, firstDay);
-        return query.getResultList();
-    }
 
     @Override
     public List<AbsenceEntry> getAbsenceByMonth(LocalDate date) {
         var firstDay = date.toString();
         var lastDay = LocalDate.parse(date.getYear() + "-" + String.format("%02d", date.getMonthValue())  + "-" + date.lengthOfMonth());
 
-        Query query = entityManager.createNativeQuery("SELECT * FROM absence " +
-                "WHERE date <= ? AND date >= ?", AbsenceEntry.class);
+        Query query = entityManager.createNativeQuery("SELECT * FROM " + tableName +
+                " WHERE date <= ? AND date >= ?", AbsenceEntry.class);
         query.setParameter(1, lastDay);
         query.setParameter(2, firstDay);
+
         return query.getResultList();
     }
+
 
 
 }
