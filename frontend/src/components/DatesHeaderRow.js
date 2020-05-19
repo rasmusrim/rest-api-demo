@@ -2,7 +2,7 @@ import React from 'react';
 
 import moment from 'moment';
 
-export default function DatesRow({month}) {
+export default function DatesHeaderRow({month}) {
     
 
     let currentDay = moment(month).startOf('month').clone();

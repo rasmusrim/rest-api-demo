@@ -6,14 +6,14 @@ import { connect } from 'react-redux'
 
 import { setActiveAbsenceTypeSelector } from '../actions/AbsenceTypeSelectorActions'
 import { updateStudent } from '../actions/StudentActions'
-import StudentRepository from '../repositories/StudentRepository';
+import AbsenceRestService from '../restServices/AbsenceRestService';
 
 function StudentAbsenceCells({ month, student, setActiveAbsenceTypeSelector, activeAbsenceTypeSelector, updateStudent }) {
     let currentDay = moment(month).startOf('month');
     let output = [];
 
     const absenceCodeSelected = (date, code) => {
-        StudentRepository.setAbsence(student, date, code).then(response => {
+        AbsenceRestService.setAbsence(student, date, code).then(response => {
             student.absence.set(date, response)
             updateStudent(student)
             setActiveAbsenceTypeSelector({})

@@ -66,6 +66,25 @@ public class AbsenceTypeService {
                 .filter(s -> s.getCode() == code)
                 .collect(Collectors.toSet());
 
-        return (AbsenceType) filteredSet.toArray()[0];
+        if (filteredSet.size() > 0) {
+            return (AbsenceType) filteredSet.toArray()[0];
+        } else {
+            return null;
+        }
+    }
+
+    public String getAbsenceTypesAsString() {
+        var absenceTypes = getAbsenceTypes();
+        String absenceCodes = "";
+
+        for (AbsenceType type : absenceTypes) {
+            if (absenceCodes.length() > 0) {
+                absenceCodes += ", ";
+            }
+            absenceCodes += type.getCode() + " (" + type.getName() + ")";
+        }
+
+        return absenceCodes;
+
     }
 }

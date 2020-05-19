@@ -1,11 +1,11 @@
-import AbsenceTypeRepository from "../repositories/AbsenceTypeRepository"
+import AbsenceTypeRestService from "../restServices/AbsenceTypeRestService"
 
 export default class AbsenceTypeService {
 
     static getAbsenceCodes() {
         return new Promise(async (resolve, reject) => {
             if (!localStorage.getItem('absenceTypes')) {
-                let absenceTypes = await AbsenceTypeRepository.getAbsenceTypes();
+                let absenceTypes = await AbsenceTypeRestService.getAbsenceTypes();
                 absenceTypes.sort((absenceType1, absenceType2) => {
                     return absenceType1.code - absenceType2.code;
                 });

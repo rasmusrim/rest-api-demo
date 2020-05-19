@@ -13,3 +13,12 @@
   }
 
 }
+
+.pointer {
+  cursor: pointer;
+
+  &:hover {
+    background: #fafafa;
+  }
+}
+

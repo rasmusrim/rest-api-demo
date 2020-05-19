@@ -6,11 +6,11 @@ import Toolbar from "./Toolbar"
 
 import { setStudents } from '../actions/StudentActions'
 
-import StudentRepository from '../repositories/StudentRepository'
+import StudentRestService from '../restServices/StudentRestService'
 
 function StudentAbsenceApp({ month, setStudents }) {
     useEffect(() => {
-        StudentRepository.getAllStudentsWithAbsenceFor(month).then(students => {
+        StudentRestService.getAllStudentsWithAbsenceFor(month).then(students => {
             setStudents(students)
         });
     }, [month, setStudents]);

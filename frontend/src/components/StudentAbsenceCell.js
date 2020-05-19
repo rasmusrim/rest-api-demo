@@ -22,7 +22,7 @@ export default function StudentAbsenceCell({ absenceEntry }) {
     }
 
     return (
-        <div style={{ backgroundColor: color, width: "20px", height: "20px" }}>
+        <div style={{ backgroundColor: color, width: "20px", height: "20px" }} className={"pointer"} >
             
         </div>
     )
