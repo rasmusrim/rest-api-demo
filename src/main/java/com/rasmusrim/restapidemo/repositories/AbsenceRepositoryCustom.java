@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface AbsenceRepositoryCustom {
-    List<AbsenceEntry> getAbsenceByMonth(LocalDate date);
+    List<AbsenceEntry> getAbsenceEntriesByMonth(LocalDate date);
+    AbsenceEntry getAbsenceEntryByDateAndStudent(LocalDate date, int studentId);
+
 }

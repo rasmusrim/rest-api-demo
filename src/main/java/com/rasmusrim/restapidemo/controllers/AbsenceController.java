@@ -2,33 +2,34 @@ package com.rasmusrim.restapidemo.controllers;
 
 import com.rasmusrim.restapidemo.models.AbsenceEntry;
 import com.rasmusrim.restapidemo.repositories.AbsenceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 public class AbsenceController {
 
-    @Autowired
     private AbsenceRepository absenceRepository;
+
+    public AbsenceController(AbsenceRepository absenceRepository) {
+        this.absenceRepository = absenceRepository;
+    }
 
     @GetMapping({"/absence/{year}/{month}"})
     public Map<Long, AbsenceEntry> getAbsenceForAllStudents(@PathVariable(required = true) String year, @PathVariable(required = true) String month) {
-        var date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month),1);
-        var absenceEntries = absenceRepository.getAbsenceByMonth(date);
+        var date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
+        var absenceEntries = absenceRepository.getAbsenceEntriesByMonth(date);
         var iterator = absenceEntries.iterator();
 
         var returnMap = new HashMap<Long, AbsenceEntry>();
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             var absenceEntry = iterator.next();
             returnMap.put(absenceEntry.getId(), absenceEntry);
         }
@@ -37,22 +38,28 @@ public class AbsenceController {
     }
 
 
-    @PatchMapping({"/student/absence/{id}"})
-    public AbsenceEntry setAbsence(@PathVariable(required = true) String id, @RequestBody Map<String, String> payload) throws ParseException {
-        var absence = new AbsenceEntry();
+    @PostMapping({"/student/absence/{studentId}"})
+    public AbsenceEntry setAbsence(@PathVariable(required = true) String studentId, @RequestBody Map<String, String> payload) throws ParseException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        var date = formatter.parse(payload.get("date"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(payload.get("date"), formatter);
         System.out.println(payload.get("date"));
         System.out.println(date);
 
-        absence.setDate(date);
-        absence.setStudentId(Integer.parseInt(id));
-        absence.setAbsenceCode(Byte.parseByte(payload.get("absenceCode")));
+        AbsenceEntry absenceEntry = absenceRepository.getAbsenceEntryByDateAndStudent(date, Integer.parseInt(studentId));
 
-        absenceRepository.save(absence);
+        if (absenceEntry == null) {
+            absenceEntry = new AbsenceEntry();
 
-        return absence;
+        }
+
+        absenceEntry.setDate(date);
+        absenceEntry.setStudentId(Integer.parseInt(studentId));
+        absenceEntry.setAbsenceCode(Byte.parseByte(payload.get("absenceCode")));
+
+        absenceRepository.save(absenceEntry);
+
+        return absenceEntry;
 
     }
 

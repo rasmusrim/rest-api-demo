@@ -1,30 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Student from "./Student"
 import DatesHeaderRow from "./DatesHeaderRow"
 import StudentAbsenceCells from "./StudentAbsenceCells"
 
-import StudentRepository from "../repositories/StudentRepository"
-import _ from 'lodash'
-
-import setStudents from '../reducers/StudentReducer'
-
 import { connect } from 'react-redux'
 
-import moment from 'moment';
-
 function StudentList({ month, students, setStudents }) {
-
-    const [activeAbsenceTypeSelector, setActiveAbsenceTypeSelector] = useState({});
-
-    const studentAbsenceCellClicked = async function (student, date) {
-        const activeAbsenceTypeSelector = {
-            student: student,
-            date: date
-        }
-
-        setActiveAbsenceTypeSelector(activeAbsenceTypeSelector);
-
-    }
 
     let emptyColumns = [];
     for (let i = 0; i < 2; i++) {
@@ -48,8 +29,6 @@ function StudentList({ month, students, setStudents }) {
                             <Student student={student} />
 
                             <StudentAbsenceCells
-                                showAbsenceCodeSelectorDate={(typeof activeAbsenceTypeSelector.student !== "undefined" && student.id === activeAbsenceTypeSelector.student.id) ? activeAbsenceTypeSelector.date : null}
-                                studentAbsenceCellClicked={studentAbsenceCellClicked}
                                 month={month}
                                 student={student}
                             />
@@ -68,19 +47,10 @@ function StudentList({ month, students, setStudents }) {
 function mapStateToProps(state, ownProps) {
     return {
         month: state.month,
-        students: state.students
+        students: state.students,
+        
     };
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        setStudents: students => {
-            
-            dispatch(setStudents(students))
-        }
-    }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(StudentList);
+export default connect(mapStateToProps)(StudentList);
 

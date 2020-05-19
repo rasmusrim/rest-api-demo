@@ -26,6 +26,7 @@ export default class StudentRepository {
         for (let key in absenceEntries) {
             let absenceEntry = absenceEntries[key];
             let absenceEntryDate = moment(absenceEntry.date);
+            console.log(absenceEntryDate)
             let studentId = absenceEntry.studentId;
 
             students[studentId].absence.set(absenceEntryDate.format('YYYY-MM-DD'), absenceEntry);
@@ -44,7 +45,7 @@ export default class StudentRepository {
 
             }
             let config = {
-                method: "PATCH",
+                method: "POST",
                 body: JSON.stringify(body),
                 headers: {
                     'content-type': 'application/json'
