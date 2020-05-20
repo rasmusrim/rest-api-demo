@@ -1,7 +1,5 @@
 package com.rasmusrim.restapidemo.services;
 
-import org.json.JSONObject;
-
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -19,12 +17,4 @@ public class LoggingService {
         }
 
     }
-
-    static public void log(Object object) {
-        try {
-            JSONObject obj = (JSONObject) object;
-            log(obj.toString(4));
-        } catch (Exception e) {}
-    }
-
 }

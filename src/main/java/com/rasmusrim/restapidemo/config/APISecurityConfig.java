@@ -1,4 +1,4 @@
-package com.rasmusrim.restapidemo;
+package com.rasmusrim.restapidemo.config;
 
 import com.rasmusrim.restapidemo.config.APIKeyAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,9 @@ public class APISecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+
         APIKeyAuthFilter filter = new APIKeyAuthFilter(principalRequestHeader);
+
         filter.setAuthenticationManager(new AuthenticationManager() {
 
             @Override
@@ -42,9 +45,11 @@ public class APISecurityConfig extends WebSecurityConfigurerAdapter {
         });
         httpSecurity.
                 antMatcher("/**").
+                cors().and().
                 csrf().disable().
                 sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                 and().addFilter(filter).authorizeRequests().anyRequest().authenticated();
+
     }
 
 }

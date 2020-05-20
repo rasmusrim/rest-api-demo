@@ -43,9 +43,9 @@ public class AbsenceController {
             );
         }
 
-        if (month.length() != 2) {
+        if (month.length() < 1 || month.length() > 2) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Month must have two digits."
+                    HttpStatus.BAD_REQUEST, "Month must have one or two digits."
             );
 
         }

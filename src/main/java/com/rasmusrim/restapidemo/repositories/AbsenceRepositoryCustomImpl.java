@@ -36,7 +36,7 @@ public class AbsenceRepositoryCustomImpl implements AbsenceRepositoryCustom {
     }
 
     @Override
-    public AbsenceEntry getAbsenceEntryByDateAndStudent(LocalDate date, int studentId) {
+    public AbsenceEntry getAbsenceEntryByDateAndStudent(LocalDate date, long studentId) {
         Query query = entityManager.createNativeQuery("SELECT * FROM " + tableName +
                 " WHERE date = ? AND student_id = ?", AbsenceEntry.class);
         query.setParameter(1, date);
