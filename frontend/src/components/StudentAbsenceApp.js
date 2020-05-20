@@ -9,9 +9,11 @@ import { setStudents } from '../actions/StudentActions'
 import StudentRestService from '../restServices/StudentRestService'
 
 function StudentAbsenceApp({ month, setStudents }) {
+
     useEffect(() => {
         StudentRestService.getAllStudentsWithAbsenceFor(month).then(students => {
             setStudents(students)
+
         });
     }, [month, setStudents]);
 

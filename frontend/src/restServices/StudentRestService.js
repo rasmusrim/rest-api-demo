@@ -1,12 +1,14 @@
 import restConfig from "../config.json";
 
 import AbsenceRestService from "./AbsenceRestService"
+import BaseRestService from "./BaseRestService"
+
 import moment from 'moment';
 
 export default class StudentRestService {
     static getAllStudents() {
         return new Promise((resolve, reject) => {
-            fetch(restConfig.baseRestUrl + "/student").then(response => response.json().then(response => {
+            BaseRestService.fetch(restConfig.baseRestUrl + "/student").then(response => response.json().then(response => {
                 resolve(response);
             }))
         })
@@ -28,7 +30,9 @@ export default class StudentRestService {
             let absenceEntryDate = moment(absenceEntry.date);
             let studentId = absenceEntry.studentId;
 
-            students[studentId].absence.set(absenceEntryDate.format('YYYY-MM-DD'), absenceEntry);
+            if (typeof students[studentId] !== "undefined") {
+                students[studentId].absence.set(absenceEntryDate.format('YYYY-MM-DD'), absenceEntry);
+            }
         }
 
         return students
@@ -40,7 +44,7 @@ export default class StudentRestService {
                 method: 'DELETE'
             }
 
-            fetch(restConfig.baseRestUrl + "/student/" + student.id, config).then(response => response.json().then(response => {
+            BaseRestService.fetch(restConfig.baseRestUrl + "/student/" + student.id, config).then(response => response.json().then(response => {
                 resolve(response);
             }))
 
@@ -62,7 +66,7 @@ export default class StudentRestService {
 
             }
 
-            fetch(restConfig.baseRestUrl + "/student", config).then(response => response.json().then(response => {
+            BaseRestService.fetch(restConfig.baseRestUrl + "/student", config).then(response => response.json().then(response => {
                 resolve(response);
             }))
 
@@ -84,7 +88,7 @@ export default class StudentRestService {
 
             }
 
-            fetch(restConfig.baseRestUrl + "/student/" + student.id, config).then(response => response.json().then(response => {
+            BaseRestService.fetch(restConfig.baseRestUrl + "/student/" + student.id, config).then(response => response.json().then(response => {
                 resolve(response);
             }))
 

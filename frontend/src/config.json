@@ -1,1 +1,4 @@
-{ "baseRestUrl": "http://localhost:8080"}
+{
+    "baseRestUrl": "http://localhost:8080",
+    "apiKey": "demo123"
+}

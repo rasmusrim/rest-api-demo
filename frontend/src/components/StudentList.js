@@ -46,7 +46,6 @@ function StudentList({ month, students, addStudent }) {
     }
 
     let studentsArray = Object.values(students);
-    console.log(students)
     
     studentsArray = studentsArray.sort((a, b) => {
         if (a.lastName > b.lastName) {

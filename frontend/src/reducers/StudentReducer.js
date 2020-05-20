@@ -2,7 +2,6 @@ import { SET_STUDENTS, UPDATE_STUDENT, ADD_STUDENT, DELETE_STUDENT } from '../ac
 import _ from 'lodash'
 
 export default function studentReducer(state = [], action) {
-    console.log("Reducer: " + action.type)
     let newStudents;
 
     switch (action.type) {
@@ -12,8 +11,6 @@ export default function studentReducer(state = [], action) {
         case UPDATE_STUDENT:
             newStudents = _.cloneDeep(state);
             newStudents[action.student.id] = action.student;
-
-            console.log(newStudents)
 
             return newStudents;
 

@@ -14,7 +14,6 @@ export function setStudents(students) {
 }
 
 export function updateStudent(student) {
-  console.log('In action')
   const returnValue = {
     type: UPDATE_STUDENT,
     student
