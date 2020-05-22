@@ -7,12 +7,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-import org.junit.Before;
 
-
-import java.util.Locale;
-
-@SpringBootTest
 class LocaleResolverTests {
 
 	@Test

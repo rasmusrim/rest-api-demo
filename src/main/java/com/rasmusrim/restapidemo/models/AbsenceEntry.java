@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 
 @Entity

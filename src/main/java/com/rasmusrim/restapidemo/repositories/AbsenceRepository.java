@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface AbsenceRepository extends CrudRepository<AbsenceEntry, Long>, AbsenceRepositoryCustom {
-    public void deleteByStudentId(long studentId);
+    AbsenceEntry getById(long id);
+    void deleteByStudentId(long studentId);
 }
